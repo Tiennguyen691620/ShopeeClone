@@ -1,14 +1,27 @@
-import { useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import ProductList from '../pages/ProductList'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import RegisterLayout from '../layouts/RegisterLayout'
 import MainLayout from 'src/layouts/MainLayout'
+import Profile from 'src/pages/Profile'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
+
+function ProtectedRoute() {
+  const {isAuthenticated} = useContext(AppContext)
+  return isAuthenticated ? <Outlet></Outlet> : <Navigate to={'/login'}></Navigate>
+}
+function RejectedRoute() {
+  const {isAuthenticated} = useContext(AppContext)
+  return !isAuthenticated ? <Outlet></Outlet> : <Navigate to={'/'}></Navigate>
+}
 
 export default function useRouteElement() {
   const routeElements = useRoutes([
     {
       path: '/',
+      index: true,
       element: (
         <MainLayout>
           <ProductList></ProductList>
@@ -16,20 +29,40 @@ export default function useRouteElement() {
       )
     },
     {
-      path: '/login',
-      element: (
-        <RegisterLayout>
-          <Login></Login>
-        </RegisterLayout>
-      )
+      path: '',
+      element: <ProtectedRoute></ProtectedRoute>,
+      children: [
+        {
+          path: '/profile',
+          element: (
+            <MainLayout>
+              <Profile></Profile>
+            </MainLayout>
+          )
+        }
+      ]
     },
     {
-      path: 'register',
-      element: (
-        <RegisterLayout>
-          <Register></Register>
-        </RegisterLayout>
-      )
+      path: '',
+      element: <RejectedRoute></RejectedRoute>,
+      children: [
+        {
+          path: '/login',
+          element: (
+            <RegisterLayout>
+              <Login></Login>
+            </RegisterLayout>
+          )
+        },
+        {
+          path: 'register',
+          element: (
+            <RegisterLayout>
+              <Register></Register>
+            </RegisterLayout>
+          )
+        }
+      ]
     }
   ])
   return routeElements

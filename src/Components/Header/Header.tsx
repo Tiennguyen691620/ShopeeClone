@@ -1,6 +1,24 @@
 import { Link } from 'react-router-dom'
+import Popover from '../Popover'
+import { useMutation } from '@tanstack/react-query'
+import { logout } from 'src/apis/auth.api'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Header() {
+  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext)
+
+  const logoutMutation = useMutation({
+    mutationFn: () => {
+      return logout()
+    },
+    onSuccess: () => {
+      setIsAuthenticated(false)
+    }
+  })
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
   return (
     <header className='header bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-2 text-white'>
       <div className='container'>
@@ -51,7 +69,18 @@ export default function Header() {
                 <span className='mx-1'>Hỗ Trợ</span>
               </div>
             </div>
-            <div className='flex items-center py-2 hover:text-gray-300 cursor-pointer'>
+            <Popover
+              as={'div'}
+              className='flex items-center py-2 hover:text-gray-300 cursor-pointer'
+              rerenderPopover={
+                <div className='bg-white relative shadow-sm rounded-sm border border-gray-200'>
+                  <div className='flex flex-col py-2 px-3'>
+                    <button className='py-2 px-3 hover:text-orange'>Tiếng Việt</button>
+                    <button className='py-2 px-3 mt-2 hover:text-orange'>English</button>
+                  </div>
+                </div>
+              }
+            >
               <div className='icon'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -87,19 +116,50 @@ export default function Header() {
                   />
                 </svg>
               </div>
-            </div>
-            <div className='flex items-center py-2 hover:text-gray-300 cursor-pointer'>
-              <div className='avatar w-5 h-5 flex-shrink-0'>
-                <img
-                  src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
-                  alt='avatar'
-                  className='w-full h-full object-cover rounded-full'
-                />
+            </Popover>
+            {isAuthenticated && (
+              <Popover
+                className='flex items-center py-2 hover:text-gray-300 cursor-pointer'
+                rerenderPopover={
+                  <div className='flex flex-col text-left bg-white relative shadow-sm rounded-sm border border-gray-200'>
+                    <Link
+                      to='/profile'
+                      className='px-3 py-4 hover:bg-slate-100 bg-white hover:text-cyan-500 '
+                    >
+                      Tài khoản của tôi
+                    </Link>
+                    <Link
+                      to='/'
+                      className='px-3  py-4 hover:bg-slate-100 bg-white hover:text-cyan-500 '
+                    >
+                      Đơn mua
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className='px-3  py-4 hover:bg-slate-100 bg-white hover:text-cyan-500 text-left'
+                    >
+                      Đăng Xuất
+                    </button>
+                  </div>
+                }
+              >
+                <div className='avatar w-5 h-5 flex-shrink-0'>
+                  <img
+                    src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+                    alt='avatar'
+                    className='w-full h-full object-cover rounded-full'
+                  />
+                </div>
+                <div className='name ml-3'>
+                  <span>Nguyen Tan Tien</span>
+                </div>
+              </Popover>
+            )}
+            {!isAuthenticated && (
+              <div className='py-2 hover:text-gray-300 cursor-pointer'>
+                <Link to={'/login'}>Đăng nhập</Link>
               </div>
-              <div className='name ml-3'>
-                <span>Nguyen Tan Tien</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
         <div className='grid grid-cols-12 gap-4 mt-4 items-center'>
@@ -117,25 +177,128 @@ export default function Header() {
               className='text-black px-3 py-2 flex-grow border-none outline-none bg-transparent'
               placeholder='Free Ship Đơn Từ 0Đ'
             />
-            button.rounded-sm.py-2.px-6.flex-shrink-0.bg-orange.hover:opacity-90
-          </form>
-          <div className='cart col-span-1'>
-            <Link to={'/'}>
+            <button className='rounded-sm py-2 px-6 flex-shrink-0 bg-orange hover:opacity-90'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
                 viewBox='0 0 24 24'
                 strokeWidth={1.5}
                 stroke='currentColor'
-                className='w-8 h-8'
+                className='w-6 h-6'
               >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  d='M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z'
                 />
               </svg>
-            </Link>
+            </button>
+          </form>
+          <div className='cart col-span-1 justify-self-start'>
+            <Popover
+              // initialOpen={true}
+              className=''
+              rerenderPopover={
+                <div className='cart bg-white relative shadow-sm rounded-sm border border-gray-200 max-w-[400px] text-sm'>
+                  <div className='px-2'>
+                    <header className='cart-header text-gray-400 capitalize '>
+                      Sản phẩm mới thêm
+                    </header>
+                    <div className='cart-content mt-5'>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0 w-10 h-10 object-cover'>
+                          <img
+                            src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+                            alt='product'
+                          />
+                        </div>
+                        <div className='flex-grow ml-2 overflow-hidden'>
+                          <div className='truncate'>
+                            NguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTien
+                          </div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>600</span>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0 w-10 h-10 object-cover'>
+                          <img
+                            src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+                            alt='product'
+                          />
+                        </div>
+                        <div className='flex-grow ml-2 overflow-hidden'>
+                          <div className='truncate'>
+                            NguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTien
+                          </div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>600</span>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0 w-10 h-10 object-cover'>
+                          <img
+                            src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+                            alt='product'
+                          />
+                        </div>
+                        <div className='flex-grow ml-2 overflow-hidden'>
+                          <div className='truncate'>
+                            NguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTien
+                          </div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>600</span>
+                        </div>
+                      </div>
+                      <div className='mt-4 flex'>
+                        <div className='flex-shrink-0 w-10 h-10 object-cover'>
+                          <img
+                            src='https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+                            alt='product'
+                          />
+                        </div>
+                        <div className='flex-grow ml-2 overflow-hidden'>
+                          <div className='truncate'>
+                            NguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTienNguyenTanTien
+                          </div>
+                        </div>
+                        <div className='ml-2 flex-shrink-0'>
+                          <span className='text-orange'>600</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='cart-footer'>
+                      <footer className='flex my-6 items-center justify-between'>
+                        <div className='capitalize text-xs text-gray-600'>Thêm vào giỏ hàng</div>
+                        <button className='bg-orange capitalize hover:opacity-80 px-4 py-2 rounded-sm text-white'>
+                          Xem giỏ hàng
+                        </button>
+                      </footer>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
+              <Link to={'/'}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-8 h-8'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
+                  />
+                </svg>
+              </Link>
+            </Popover>
           </div>
         </div>
       </div>
