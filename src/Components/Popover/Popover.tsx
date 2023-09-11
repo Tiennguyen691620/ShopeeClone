@@ -62,7 +62,7 @@ export default function Popover({
   return (
     <Element className={className} ref={refs.setReference} { ...getReferenceProps()}>
       {children}
-      <FloatingPortal>
+      <FloatingPortal id={id}>
         <AnimatePresence>
           {open && (
             <motion.div
