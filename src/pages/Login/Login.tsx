@@ -11,12 +11,13 @@ import { ErrorResponseApi } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/Components/Button'
+import path from 'src/constants/path'
 
 type FormData = Omit<Schema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
 
 export default function Login() {
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
@@ -28,16 +29,17 @@ export default function Login() {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (body: FormData): any => {
-      login(body)
+    mutationFn: (body: FormData) => {
+      return login(body)
     }
   })
 
   const onSubmit = handleSubmit((data) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (result) => {
         setIsAuthenticated(true)
-        navigate('/')
+        setProfile(result.data.data.user)
+        navigate(path.home)
       },
       onError: (error) => {
         if (isAxiosUnprocessableEntity<ErrorResponseApi<FormData>>(error)) {

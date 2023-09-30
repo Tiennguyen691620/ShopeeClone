@@ -1,8 +1,9 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
-import { clearAccessTokenFromLS, getAccessTokenFromLS, saveAccessTokenToLS } from './auth'
+import { clearAccessTokenFromLS, clearProfileFromLS, getAccessTokenFromLS, setAccessTokenToLS, setProfileToLS } from './auth'
 import { AuthResponse } from 'src/types/auth.type'
+import path from 'src/constants/path'
 
 class Http {
   instance: AxiosInstance
@@ -33,16 +34,19 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === '/login' || url === '/register') {
-          this.accessToken = (response.data as AuthResponse).data.access_token
-          saveAccessTokenToLS(this.accessToken)
-          this.message = (response.data as AuthResponse).message
-          toast.success(this.message, {autoClose: 1500})
-        } else if (url === '/logout') {
+        const result = response.data as AuthResponse
+        if (url === path.login || url === path.register) {
+          this.accessToken = result.data.access_token
+          setAccessTokenToLS(this.accessToken)
+          setProfileToLS(result.data.user)
+          // this.message = result.message
+          // toast.success(this.message, {autoClose: 1500})
+        } else if (url === path.logout) {
           this.accessToken = ''
           clearAccessTokenFromLS()
-          this.message = (response.data as AuthResponse).message
-          toast.success(this.message, {autoClose: 1500})
+          clearProfileFromLS()
+          // this.message = result.message
+          // toast.success(this.message, {autoClose: 1500})
         }
         return response
       },

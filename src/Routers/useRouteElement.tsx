@@ -7,6 +7,7 @@ import MainLayout from 'src/layouts/MainLayout'
 import Profile from 'src/pages/Profile'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
+import path from 'src/constants/path'
 
 function ProtectedRoute() {
   const {isAuthenticated} = useContext(AppContext)
@@ -33,7 +34,7 @@ export default function useRouteElement() {
       element: <ProtectedRoute></ProtectedRoute>,
       children: [
         {
-          path: '/profile',
+          path: path.profile,
           element: (
             <MainLayout>
               <Profile></Profile>
@@ -47,7 +48,7 @@ export default function useRouteElement() {
       element: <RejectedRoute></RejectedRoute>,
       children: [
         {
-          path: '/login',
+          path: path.login,
           element: (
             <RegisterLayout>
               <Login></Login>
@@ -55,7 +56,7 @@ export default function useRouteElement() {
           )
         },
         {
-          path: 'register',
+          path: path.register,
           element: (
             <RegisterLayout>
               <Register></Register>
