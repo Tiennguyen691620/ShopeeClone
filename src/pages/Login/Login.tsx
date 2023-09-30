@@ -5,13 +5,13 @@ import { Schema, getRules, schema } from 'src/utils/rules'
 import Input from 'src/Components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { MutationKey, useMutation } from '@tanstack/react-query'
-import { login } from 'src/apis/auth.api'
 import { isAxiosUnprocessableEntity } from 'src/utils/utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/Components/Button'
 import path from 'src/constants/path'
+import authApi from 'src/apis/auth.api'
 
 type FormData = Omit<Schema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
@@ -30,7 +30,7 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: (body: FormData) => {
-      return login(body)
+      return authApi.login(body)
     }
   })
 
