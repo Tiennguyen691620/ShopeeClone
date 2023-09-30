@@ -21,7 +21,7 @@ function RejectedRoute() {
 export default function useRouteElement() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: path.home,
       index: true,
       element: (
         <MainLayout>
@@ -45,7 +45,7 @@ export default function useRouteElement() {
     },
     {
       path: '',
-      element: <RejectedRoute></RejectedRoute>,
+      // element: <RejectedRoute></RejectedRoute>,
       children: [
         {
           path: path.login,

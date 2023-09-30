@@ -1,5 +1,6 @@
 import AsideFilter from './AsideFilter'
 import Product from './Product'
+import SortProductList from './SortProductList'
 
 export default function ProductList() {
   return (
@@ -10,7 +11,7 @@ export default function ProductList() {
             <AsideFilter></AsideFilter>
           </div>
           <div className='col-span-9'>
-            <ProductList></ProductList>
+            <SortProductList></SortProductList>
             <div className='mt-6 grid grid-cols-2 md:gird-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3'>
               {Array(30)
                 .fill(0)
