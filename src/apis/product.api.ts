@@ -1,5 +1,5 @@
 import { SuccessResponseApi } from 'src/types/utils.type';
-import { Product, ProductList, ProductListConfig } from './../types/prouct.type';
+import { Product, ProductList, ProductListConfig } from '../types/product.type';
 import http from "src/utils/http"
 
 
