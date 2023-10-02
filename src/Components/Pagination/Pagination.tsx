@@ -19,7 +19,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
       if (!dotBefore) {
         dotBefore = true
         return (
-          <span className='bg-white rounded px-3 p-2 shadow-sm mx-2 cursor-pointer'>
+          <span key={index} className='bg-white rounded px-3 p-2 shadow-sm mx-2 cursor-pointer'>
             ...
           </span>
         )
@@ -30,7 +30,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
       if (!dotAfter) {
         dotAfter = true
         return (
-          <span className='bg-white rounded px-3 p-2 shadow-sm mx-2 cursor-pointer'>
+          <span key={index} className='bg-white rounded px-3 p-2 shadow-sm mx-2 cursor-pointer'>
             ...
           </span>
         )
