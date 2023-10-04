@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import Input from 'src/Components/Input'
-import { getRules, schema, Schema } from 'src/utils/rules'
+import { schema, Schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { omit } from 'lodash'
