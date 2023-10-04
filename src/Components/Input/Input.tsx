@@ -10,7 +10,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default function Input({
-  type,
+  // type,
   errorMessage,
   className,
   name,
