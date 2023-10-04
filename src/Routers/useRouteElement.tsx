@@ -45,7 +45,7 @@ export default function useRouteElement() {
     },
     {
       path: '',
-      // element: <RejectedRoute></RejectedRoute>,
+      element: <RejectedRoute></RejectedRoute>,
       children: [
         {
           path: path.login,
